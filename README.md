@@ -41,4 +41,3 @@ AlzCare+ - Comprehensive care, enhanced by AI &amp; ML. It is a AI-Based Lightwe
 ## Dataset 
  - https://archive.ics.uci.edu/dataset/231/pamap2+physical+activity+monitoring
  - https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones
- - 
