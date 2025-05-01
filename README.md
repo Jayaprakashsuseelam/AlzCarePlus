@@ -1,4 +1,4 @@
-# AlzCarePlus
+# AlzCare+
 AlzCare+ - Comprehensive care, enhanced by AI &amp; ML. It is a AI-Based Lightweight platform (Web & Mobile App systems) to Monitor, Assist, and Alert Alzheimer’s Patients and Caretakers.
 
 ## 🧠 1. Patient Monitoring Features
