@@ -38,3 +38,7 @@ AlzCare+ - Comprehensive care, enhanced by AI &amp; ML. It is a AI-Based Lightwe
  - Mood Tracking (Optional): Patients can log how they feel; AI can detect mood shifts from voice tone or patterns.
 
    
+## Dataset 
+ - https://archive.ics.uci.edu/dataset/231/pamap2+physical+activity+monitoring
+ - https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones
+ - 
