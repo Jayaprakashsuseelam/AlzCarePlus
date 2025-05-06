@@ -42,9 +42,36 @@ AlzCare+ - Comprehensive care, enhanced by AI &amp; ML. It is a AI-Based Lightwe
  - https://archive.ics.uci.edu/dataset/231/pamap2+physical+activity+monitoring
  - https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones
 
-## Technology Stack
- - Backend
-   - 
- - Frontend
-   - 
+## Project structure (Growing)
+alzcareplus/
+├── backend/
+│   ├── backend/         # Django project settings
+│   ├── patients/            # App for patient-related models and views
+│   ├── caregivers/          # App for caregiver-related models and views
+│   ├── monitoring/          # App for real-time monitoring features
+│   ├── reminders/           # App for scheduling and reminders
+│   ├── ml_models/           # App for ML model integration
+│   ├── requirements.txt     # Python dependencies
+│   └── manage.py
+├── frontend/
+│   └── ...                  # React or Next.js frontend code
+├── docker-compose.yml       # Optional
+└── README.md
 
+## Suggested technology stack
+ - Backend:
+    - Framework: Django
+    - API: Django REST Framework
+    - Database: PostgreSQL
+    - Authentication: Token-based (e.g., JWT)
+    - Machine Learning Integration: Python scripts or services integrated via Django views or Celery tasks
+
+ - Frontend:
+    - Framework: React or Next.js
+    - Communication: Consume RESTful APIs provided by the Django backend
+
+ - Deployment:
+    - Containerization: Docker
+    - Web Server: Gunicorn
+    - Reverse Proxy: Nginx
+    - Hosting: Cloud services like AWS, Heroku, or DigitalOcean

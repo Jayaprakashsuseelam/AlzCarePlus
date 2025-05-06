@@ -9,9 +9,9 @@ INSTALLED_APPS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'alzcareplus_db',
-        'USER': 'your_db_user',
-        'PASSWORD': 'your_db_password',
+        'NAME': 'alzcareplus_be_db',
+        'USER': 'postgres',
+        'PASSWORD': '#postgres@usr5466',
         'HOST': 'localhost',
         'PORT': '5432',
     }
