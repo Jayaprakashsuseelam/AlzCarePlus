@@ -75,3 +75,7 @@ alzcareplus/
     - Web Server: Gunicorn
     - Reverse Proxy: Nginx
     - Hosting: Cloud services like AWS, Heroku, or DigitalOcean
+
+- Machine Learning
+    - Algorithm :
+    
