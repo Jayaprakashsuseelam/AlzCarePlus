@@ -1,6 +1,9 @@
 # AlzCare+
 AlzCare+ - Comprehensive care, enhanced by AI &amp; ML. It is a AI-Based Lightweight platform (Web & Mobile App systems) to Monitor, Assist, and Alert Alzheimer’s Patients and Caretakers.
 
+## Scope of the project
+Enable continuous, passive monitoring of patient activities (e.g., walking, sleeping, sitting, and falls) using mobile device sensors and optional wearable integrations to enhance safety and care personalization for Alzheimer’s patients.
+
 ## 🧠 1. Patient Monitoring Features
  - Real-Time Location Tracking (GPS): Continuously monitor patient movement and alert if they wander beyond safe zones.
  - Geo-Fencing Alerts: Notify caretakers if the patient leaves a predefined safe area.
@@ -78,4 +81,4 @@ alzcareplus/
 
 - Machine Learning
     - Algorithm :
-    
+    - 
