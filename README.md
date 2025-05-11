@@ -58,6 +58,7 @@ alzcareplus/
 │   └── manage.py
 ├── frontend/
 │   └── ...                  # React or Next.js frontend code
+├── Deployment/
 ├── docker-compose.yml       # Optional
 └── README.md
 
