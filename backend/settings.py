@@ -1,7 +1,7 @@
 # backend/settings.py
 
 INSTALLED_APPS = [
-    ...
+    ..
     'rest_framework',
     'patients',
 ]
