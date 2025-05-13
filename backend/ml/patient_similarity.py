@@ -1,3 +1,12 @@
+# backend/ml/patient_similarity.py
+"""
+The module will:
+Scale and normalize the features
+Use cosine similarity to find the most similar patients
+Provide similarity scores and explanations
+Handle missing values automatically
+"""
+
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import StandardScaler
