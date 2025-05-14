@@ -48,7 +48,8 @@ Enable continuous, passive monitoring of patient activities (e.g., walking, slee
 ## Project structure (Growing)
 alzcareplus/
 ├── backend/
-│   ├── backend/         # Django project settings
+│   ├── backend/             # Django project settings
+│       ├──backend/
 │   ├── patients/            # App for patient-related models and views
 │   ├── caregivers/          # App for caregiver-related models and views
 │   ├── monitoring/          # App for real-time monitoring features
@@ -56,6 +57,7 @@ alzcareplus/
 │   ├── ml_models/           # App for ML model integration
 │   ├── requirements.txt     # Python dependencies
 │   └── manage.py
+├── ml/
 ├── frontend/
 │   └── ...                  # React or Next.js frontend code
 ├── Deployment/
