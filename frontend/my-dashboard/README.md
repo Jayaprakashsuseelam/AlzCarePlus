@@ -2,6 +2,22 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Page URLs
+
+| Page                | URL                                 |
+|---------------------|-------------------------------------|
+| Dashboard           | /dashboard                          |
+| Tables              | /tables                             |
+| Billing             | /billing                            |
+| RTL                 | /rtl                                |
+| Notifications       | /notifications                      |
+| Profile             | /profile                            |
+| Sign In             | /authentication/sign-in             |
+| Sign Up             | /authentication/sign-up             |
+
+**Note:**
+- A Reset Password page exists in `src/layouts/authentication/reset-password/cover/`, but is not currently routed. To enable it, add it to your `routes.js` and navigation (e.g., `/authentication/reset-password`).
+
 ## Available Scripts
 
 In the project directory, you can run:

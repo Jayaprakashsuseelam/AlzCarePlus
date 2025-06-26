@@ -1,8 +1,8 @@
 # AlzCare+
-AlzCare+ - Comprehensive care, enhanced by AI &amp; ML. It is a AI-Based Lightweight platform (Web & Mobile App systems) to Monitor, Assist, and Alert Alzheimer’s Patients and Caretakers.
+AlzCare+ - Comprehensive care, enhanced by AI &amp; ML. It is a AI-Based Lightweight platform (Web & Mobile App systems) to Monitor, Assist, and Alert Alzheimer's Patients and Caretakers.
 
 ## Scope of the project
-Enable continuous, passive monitoring of patient activities (e.g., walking, sleeping, sitting, and falls) using mobile device sensors and optional wearable integrations to enhance safety and care personalization for Alzheimer’s patients.
+Enable continuous, passive monitoring of patient activities (e.g., walking, sleeping, sitting, and falls) using mobile device sensors and optional wearable integrations to enhance safety and care personalization for Alzheimer's patients.
 
 ## 🧠 1. Patient Monitoring Features
  - Real-Time Location Tracking (GPS): Continuously monitor patient movement and alert if they wander beyond safe zones.
@@ -49,7 +49,7 @@ Enable continuous, passive monitoring of patient activities (e.g., walking, slee
 alzcareplus/
 ├── backend/
 │   ├── backend/             # Django project settings
-│       ├──backend/
+│   ├── users/               # App for user authentication and management
 │   ├── patients/            # App for patient-related models and views
 │   ├── caregivers/          # App for caregiver-related models and views
 │   ├── monitoring/          # App for real-time monitoring features
@@ -63,6 +63,34 @@ alzcareplus/
 ├── Deployment/
 ├── docker-compose.yml       # Optional
 └── README.md
+
+## Backend API Endpoints
+
+### User Authentication & Management
+- `POST   /api/users/auth/register/`         - Register a new user
+- `POST   /api/users/auth/login/`            - User login
+- `POST   /api/users/auth/logout/`           - User logout
+- `GET    /api/users/profile/`               - Get current user profile
+- `PUT    /api/users/profile/`               - Update current user profile
+- `POST   /api/users/profile/change-password/` - Change password
+- `POST   /api/users/auth/password-reset/`   - Request password reset
+- `POST   /api/users/auth/password-reset/confirm/` - Confirm password reset
+- `GET    /api/users/me/`                    - Get current user info
+- `GET    /api/users/users/`                 - List all users (admin)
+- `GET    /api/users/users/<id>/`            - Retrieve user by ID (admin)
+- `PUT    /api/users/users/<id>/`            - Update user by ID (admin)
+- `DELETE /api/users/users/<id>/`            - Deactivate user (admin)
+- `POST   /api/users/users/<user_id>/verify/`- Verify user account (admin)
+- `GET    /api/users/users/stats/`           - User statistics (admin)
+
+### Patient Management
+- `GET    /api/patients/`                    - List all patients
+- `POST   /api/patients/`                    - Create a new patient
+- `GET    /api/patients/<id>/`               - Retrieve patient by ID
+- `PUT    /api/patients/<id>/`               - Update patient by ID
+- `DELETE /api/patients/<id>/`               - Delete patient by ID
+
+> More endpoints will be added as the project grows (caregivers, monitoring, reminders, etc.)
 
 ## Suggested technology stack
  - Backend:
