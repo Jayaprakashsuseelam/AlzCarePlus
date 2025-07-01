@@ -1,28 +1,29 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 
 app_name = 'users'
 
 urlpatterns = [
     # Authentication endpoints
-    path('auth/register/', views.UserRegistrationView.as_view(), name='register'),
-    path('auth/login/', views.UserLoginView.as_view(), name='login'),
-    path('auth/logout/', views.UserLogoutView.as_view(), name='logout'),
+    path('register/', views.UserRegistrationView.as_view(), name='register'),
+    path('login/', views.UserLoginView.as_view(), name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
-    # Profile management
+    # User profile and details
     path('profile/', views.UserProfileView.as_view(), name='profile'),
-    path('profile/change-password/', views.PasswordChangeView.as_view(), name='change-password'),
+    path('me/', views.UserDetailView.as_view(), name='user_detail'),
+    path('info/', views.user_info_view, name='user_info'),
     
-    # Password reset
-    path('auth/password-reset/', views.PasswordResetRequestView.as_view(), name='password-reset-request'),
-    path('auth/password-reset/confirm/', views.PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
+    # Password management
+    path('change-password/', views.ChangePasswordView.as_view(), name='change_password'),
+    path('reset-password/', views.PasswordResetRequestView.as_view(), name='reset_password_request'),
+    path('reset-password/confirm/', views.PasswordResetConfirmView.as_view(), name='reset_password_confirm'),
     
-    # User management (admin)
-    path('users/', views.UserListView.as_view(), name='user-list'),
-    path('users/<int:id>/', views.UserDetailView.as_view(), name='user-detail'),
-    path('users/<int:user_id>/verify/', views.verify_user_view, name='verify-user'),
-    path('users/stats/', views.user_stats_view, name='user-stats'),
-    
-    # Current user
-    path('me/', views.current_user_view, name='current-user'),
+    # Admin endpoints (optional)
+    path('list/', views.UserListView.as_view(), name='user_list'),
+    path('current/', views.current_user_view, name='current_user'),
+    path('verify/<int:user_id>/', views.verify_user_view, name='verify_user'),
+    path('stats/', views.user_stats_view, name='user_stats'),
 ] 

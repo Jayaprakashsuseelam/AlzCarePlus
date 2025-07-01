@@ -2,132 +2,107 @@ from rest_framework import status, generics, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth import login, logout
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.db import models
+from django.db import models, transaction
 from datetime import timedelta
 import uuid
 import logging
 
 from .models import User, UserProfile, PasswordResetToken
 from .serializers import (
-    UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer,
-    UserUpdateSerializer, PasswordChangeSerializer, PasswordResetRequestSerializer,
-    PasswordResetConfirmSerializer, UserListSerializer
+    UserRegistrationSerializer, UserLoginSerializer, UserSerializer,
+    UserProfileSerializer, ChangePasswordSerializer,
+    PasswordResetRequestSerializer, PasswordResetConfirmSerializer, UserListSerializer
 )
 
 logger = logging.getLogger(__name__)
 
 
 class UserRegistrationView(APIView):
-    """User registration endpoint"""
-    
-    permission_classes = [AllowAny]
-    
+    """View for user registration"""
+    permission_classes = [permissions.AllowAny]
+
+    @transaction.atomic
     def post(self, request):
-        """Register a new user"""
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             
-            # Log the user in after registration
-            login(request, user)
+            # Create user profile
+            UserProfile.objects.create(user=user)
             
-            # Get user profile data
-            profile_serializer = UserProfileSerializer(user.profile, context={'request': request})
+            # Generate tokens
+            refresh = RefreshToken.for_user(user)
             
             return Response({
                 'message': 'User registered successfully',
-                'user': profile_serializer.data
+                'user': UserSerializer(user).data,
+                'tokens': {
+                    'access': str(refresh.access_token),
+                    'refresh': str(refresh),
+                }
             }, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLoginView(APIView):
-    """User login endpoint"""
-    
-    permission_classes = [AllowAny]
-    
+    """View for user login"""
+    permission_classes = [permissions.AllowAny]
+
     def post(self, request):
-        """Login user"""
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
-            login(request, user)
             
-            # Get user profile data
-            profile_serializer = UserProfileSerializer(user.profile, context={'request': request})
+            # Generate tokens
+            refresh = RefreshToken.for_user(user)
             
             return Response({
                 'message': 'Login successful',
-                'user': profile_serializer.data
+                'user': UserSerializer(user).data,
+                'tokens': {
+                    'access': str(refresh.access_token),
+                    'refresh': str(refresh),
+                }
             }, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserLogoutView(APIView):
-    """User logout endpoint"""
-    
-    permission_classes = [IsAuthenticated]
-    
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    """View for user profile management"""
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        # Get or create user profile
+        profile, created = UserProfile.objects.get_or_create(user=self.request.user)
+        return profile
+
+
+class UserDetailView(generics.RetrieveUpdateAPIView):
+    """View for user details"""
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class ChangePasswordView(APIView):
+    """View for changing password"""
+    permission_classes = [permissions.IsAuthenticated]
+
     def post(self, request):
-        """Logout user"""
-        logout(request)
-        return Response({
-            'message': 'Logout successful'
-        }, status=status.HTTP_200_OK)
-
-
-class UserProfileView(APIView):
-    """User profile management"""
-    
-    permission_classes = [IsAuthenticated]
-    
-    def get(self, request):
-        """Get current user profile"""
-        profile_serializer = UserProfileSerializer(request.user.profile, context={'request': request})
-        return Response(profile_serializer.data, status=status.HTTP_200_OK)
-    
-    def put(self, request):
-        """Update user profile"""
-        user_serializer = UserUpdateSerializer(request.user, data=request.data, partial=True, context={'request': request})
-        profile_serializer = UserProfileSerializer(request.user.profile, data=request.data, partial=True, context={'request': request})
-        
-        if user_serializer.is_valid() and profile_serializer.is_valid():
-            user_serializer.save()
-            profile_serializer.save()
-            
-            # Return updated profile
-            updated_profile = UserProfileSerializer(request.user.profile, context={'request': request})
-            return Response({
-                'message': 'Profile updated successfully',
-                'user': updated_profile.data
-            }, status=status.HTTP_200_OK)
-        
-        errors = {}
-        if not user_serializer.is_valid():
-            errors.update(user_serializer.errors)
-        if not profile_serializer.is_valid():
-            errors.update(profile_serializer.errors)
-        
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class PasswordChangeView(APIView):
-    """Password change endpoint"""
-    
-    permission_classes = [IsAuthenticated]
-    
-    def post(self, request):
-        """Change user password"""
-        serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             user = request.user
             user.set_password(serializer.validated_data['new_password'])
@@ -141,12 +116,10 @@ class PasswordChangeView(APIView):
 
 
 class PasswordResetRequestView(APIView):
-    """Password reset request endpoint"""
-    
-    permission_classes = [AllowAny]
-    
+    """View for password reset request"""
+    permission_classes = [permissions.AllowAny]
+
     def post(self, request):
-        """Request password reset"""
         serializer = PasswordResetRequestSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
@@ -156,8 +129,6 @@ class PasswordResetRequestView(APIView):
             token = str(uuid.uuid4())
             expires_at = timezone.now() + timedelta(hours=24)
             
-            # Create or update reset token
-            PasswordResetToken.objects.filter(user=user, is_used=False).update(is_used=True)
             PasswordResetToken.objects.create(
                 user=user,
                 token=token,
@@ -166,10 +137,9 @@ class PasswordResetRequestView(APIView):
             
             # TODO: Send email with reset link
             # For now, just return the token (in production, send via email)
-            logger.info(f"Password reset token for {email}: {token}")
             
             return Response({
-                'message': 'Password reset email sent successfully',
+                'message': 'Password reset email sent',
                 'token': token  # Remove this in production
             }, status=status.HTTP_200_OK)
         
@@ -177,37 +147,81 @@ class PasswordResetRequestView(APIView):
 
 
 class PasswordResetConfirmView(APIView):
-    """Password reset confirmation endpoint"""
-    
-    permission_classes = [AllowAny]
-    
+    """View for password reset confirmation"""
+    permission_classes = [permissions.AllowAny]
+
     def post(self, request):
-        """Confirm password reset"""
         serializer = PasswordResetConfirmSerializer(data=request.data)
         if serializer.is_valid():
-            reset_token = serializer.validated_data['reset_token']
+            token = serializer.validated_data['token']
             new_password = serializer.validated_data['new_password']
             
-            # Update user password
-            user = reset_token.user
-            user.set_password(new_password)
-            user.save()
-            
-            # Mark token as used
-            reset_token.is_used = True
-            reset_token.save()
-            
-            return Response({
-                'message': 'Password reset successfully'
-            }, status=status.HTTP_200_OK)
+            try:
+                from .models import PasswordResetToken
+                reset_token = PasswordResetToken.objects.get(
+                    token=token,
+                    is_used=False
+                )
+                
+                if reset_token.is_expired():
+                    return Response({
+                        'error': 'Token has expired'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                
+                # Update password
+                user = reset_token.user
+                user.set_password(new_password)
+                user.save()
+                
+                # Mark token as used
+                reset_token.is_used = True
+                reset_token.save()
+                
+                return Response({
+                    'message': 'Password reset successful'
+                }, status=status.HTTP_200_OK)
+                
+            except PasswordResetToken.DoesNotExist:
+                return Response({
+                    'error': 'Invalid token'
+                }, status=status.HTTP_400_BAD_REQUEST)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def logout_view(request):
+    """View for user logout"""
+    try:
+        refresh_token = request.data.get('refresh_token')
+        if refresh_token:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        
+        return Response({
+            'message': 'Logout successful'
+        }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({
+            'error': 'Invalid token'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def user_info_view(request):
+    """View for getting current user info"""
+    user = request.user
+    return Response({
+        'user': UserSerializer(user).data
+    }, status=status.HTTP_200_OK)
 
 
 class UserListView(generics.ListAPIView):
     """List all users (admin only)"""
     
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserListSerializer
     queryset = User.objects.all().order_by('-date_joined')
     
@@ -233,27 +247,8 @@ class UserListView(generics.ListAPIView):
         return queryset
 
 
-class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """User detail view (admin only)"""
-    
-    permission_classes = [IsAuthenticated]
-    serializer_class = UserListSerializer
-    queryset = User.objects.all()
-    lookup_field = 'id'
-    
-    def destroy(self, request, *args, **kwargs):
-        """Soft delete user"""
-        user = self.get_object()
-        user.is_active = False
-        user.save()
-        
-        return Response({
-            'message': 'User deactivated successfully'
-        }, status=status.HTTP_200_OK)
-
-
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def current_user_view(request):
     """Get current user information"""
     profile_serializer = UserProfileSerializer(request.user.profile, context={'request': request})
@@ -261,7 +256,7 @@ def current_user_view(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def verify_user_view(request, user_id):
     """Verify user account (admin only)"""
     user = get_object_or_404(User, id=user_id)
@@ -274,7 +269,7 @@ def verify_user_view(request, user_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def user_stats_view(request):
     """Get user statistics (admin only)"""
     total_users = User.objects.count()
