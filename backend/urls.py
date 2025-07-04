@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/', include('patients.urls')),
+    path('api/settings/', include('user_settings.urls')),
 ]
 
 # Serve media files during development

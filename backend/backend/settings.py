@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'patients',
+    'dashboard',
+    'user_settings',
 ]
 
 MIDDLEWARE = [
@@ -83,22 +85,14 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'alzcareplus_be_db',
+        'USER': 'postgres',
+        'PASSWORD': '#postgres@usr5466',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
-# PostgreSQL Configuration (uncomment when database is set up)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'alzcareplus_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 
 
 # Password validation
