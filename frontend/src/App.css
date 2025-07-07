@@ -15,13 +15,23 @@
 
 .App-header {
   background-color: #282c34;
+  padding: 20px;
+  color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+}
+
+.App-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.App-header p {
+  font-size: 1.2rem;
+  opacity: 0.8;
 }
 
 .App-link {
@@ -35,4 +45,34 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.landing-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f7f9fa;
+  padding: 40px 20px;
+}
+
+.landing-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #2d3a4b;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.landing-description {
+  font-size: 1.25rem;
+  color: #4a5568;
+  max-width: 600px;
+  line-height: 1.6;
+  margin: 0 auto;
+  background: #fff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(44,62,80,0.07);
 }
