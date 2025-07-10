@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { authAPI, authUtils, handleAPIError } from '../../services/api';
 import './PatientAuth.css';
 
 const PatientLogin = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -9,6 +12,8 @@ const PatientLogin = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -19,6 +24,9 @@ const PatientLogin = () => {
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    if (apiError) {
+      setApiError('');
     }
   };
 
@@ -35,16 +43,40 @@ const PatientLogin = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
     
-    if (Object.keys(newErrors).length === 0) {
-      // Handle login logic here
-      console.log('Login attempt:', formData);
-      // You would typically make an API call here
-    } else {
+    if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      return;
+    }
+
+    setIsLoading(true);
+    setApiError('');
+
+    try {
+      const response = await authAPI.login({
+        email: formData.email,
+        password: formData.password
+      });
+
+      // Store the token
+      authUtils.setToken(response.token);
+      
+      // Store user data if remember me is checked
+      if (formData.rememberMe) {
+        localStorage.setItem('userData', JSON.stringify(response.patient));
+      }
+
+      // Redirect to dashboard
+      navigate('/patient/dashboard');
+      
+    } catch (error) {
+      const errorMessage = handleAPIError(error);
+      setApiError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,6 +87,12 @@ const PatientLogin = () => {
           <h1>Welcome Back</h1>
           <p>Sign in to your AlzCarePlus account</p>
         </div>
+
+        {apiError && (
+          <div className="error-alert">
+            {apiError}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -67,6 +105,7 @@ const PatientLogin = () => {
               onChange={handleChange}
               className={errors.email ? 'error' : ''}
               placeholder="Enter your email"
+              disabled={isLoading}
             />
             {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
@@ -81,6 +120,7 @@ const PatientLogin = () => {
               onChange={handleChange}
               className={errors.password ? 'error' : ''}
               placeholder="Enter your password"
+              disabled={isLoading}
             />
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
@@ -92,6 +132,7 @@ const PatientLogin = () => {
                 name="rememberMe"
                 checked={formData.rememberMe}
                 onChange={handleChange}
+                disabled={isLoading}
               />
               <span className="checkmark"></span>
               Remember me
@@ -101,8 +142,12 @@ const PatientLogin = () => {
             </a>
           </div>
 
-          <button type="submit" className="auth-button">
-            Sign In
+          <button 
+            type="submit" 
+            className={`auth-button ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 

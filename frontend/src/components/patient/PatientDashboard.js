@@ -1,182 +1,288 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { patientAPI, authAPI, authUtils, handleAPIError } from '../../services/api';
 import './PatientDashboard.css';
 
 const PatientDashboard = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [dashboardData, setDashboardData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Mock data - in a real app, this would come from API
-  const patientData = {
-    name: 'John Doe',
-    age: 65,
-    lastVisit: '2024-01-15',
-    nextAppointment: '2024-02-20',
-    medications: ['Donepezil', 'Memantine', 'Vitamin D'],
-    recentTests: [
-      { name: 'Cognitive Assessment', date: '2024-01-15', result: 'Mild Cognitive Impairment' },
-      { name: 'Blood Test', date: '2024-01-10', result: 'Normal' }
-    ]
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      setIsLoading(true);
+      const data = await patientAPI.getDashboard();
+      setDashboardData(data);
+    } catch (error) {
+      const errorMessage = handleAPIError(error);
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const renderOverview = () => (
-    <div className="dashboard-section">
-      <div className="welcome-card">
-        <h2>Welcome back, {patientData.name}!</h2>
-        <p>Here's your health overview for today</p>
-      </div>
+  const handleLogout = async () => {
+    try {
+      await authAPI.logout();
+      authUtils.clearAuth();
+      navigate('/patient/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if logout fails, clear local data and redirect
+      authUtils.clearAuth();
+      navigate('/patient/login');
+    }
+  };
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon">📅</div>
-          <div className="stat-content">
-            <h3>Next Appointment</h3>
-            <p>{patientData.nextAppointment}</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">💊</div>
-          <div className="stat-content">
-            <h3>Active Medications</h3>
-            <p>{patientData.medications.length} medications</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">📊</div>
-          <div className="stat-content">
-            <h3>Last Assessment</h3>
-            <p>{patientData.lastVisit}</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">🎯</div>
-          <div className="stat-content">
-            <h3>Health Score</h3>
-            <p>85/100</p>
-          </div>
+  if (isLoading) {
+    return (
+      <div className="dashboard-container">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Loading your dashboard...</p>
         </div>
       </div>
+    );
+  }
 
-      <div className="quick-actions">
-        <h3>Quick Actions</h3>
-        <div className="action-buttons">
-          <button className="action-btn primary">Schedule Appointment</button>
-          <button className="action-btn secondary">View Test Results</button>
-          <button className="action-btn secondary">Update Symptoms</button>
-          <button className="action-btn secondary">Contact Care Team</button>
+  if (error) {
+    return (
+      <div className="dashboard-container">
+        <div className="error-message">
+          <h2>Error Loading Dashboard</h2>
+          <p>{error}</p>
+          <button onClick={loadDashboardData} className="retry-button">
+            Try Again
+          </button>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
-  const renderMedications = () => (
-    <div className="dashboard-section">
-      <h2>Current Medications</h2>
-      <div className="medications-list">
-        {patientData.medications.map((med, index) => (
-          <div key={index} className="medication-card">
-            <div className="medication-info">
-              <h3>{med}</h3>
-              <p>Prescribed for Alzheimer's management</p>
-            </div>
-            <div className="medication-status">
-              <span className="status active">Active</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderAppointments = () => (
-    <div className="dashboard-section">
-      <h2>Upcoming Appointments</h2>
-      <div className="appointment-card">
-        <div className="appointment-date">
-          <div className="date-circle">
-            <span className="day">20</span>
-            <span className="month">FEB</span>
-          </div>
-        </div>
-        <div className="appointment-details">
-          <h3>Dr. Sarah Johnson - Neurology</h3>
-          <p>Follow-up consultation</p>
-          <p className="appointment-time">10:00 AM - 11:00 AM</p>
-        </div>
-        <div className="appointment-actions">
-          <button className="btn-secondary">Reschedule</button>
-          <button className="btn-primary">Join Meeting</button>
+  if (!dashboardData) {
+    return (
+      <div className="dashboard-container">
+        <div className="error-message">
+          <h2>No Data Available</h2>
+          <p>Unable to load dashboard data.</p>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
-  const renderTestResults = () => (
-    <div className="dashboard-section">
-      <h2>Recent Test Results</h2>
-      <div className="test-results">
-        {patientData.recentTests.map((test, index) => (
-          <div key={index} className="test-card">
-            <div className="test-header">
-              <h3>{test.name}</h3>
-              <span className="test-date">{test.date}</span>
-            </div>
-            <div className="test-result">
-              <p><strong>Result:</strong> {test.result}</p>
-            </div>
-            <button className="btn-secondary">View Details</button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  const { patient, stats, recent_activity, medications, upcoming_appointments } = dashboardData;
 
   return (
-    <div className="patient-dashboard">
+    <div className="dashboard-container">
+      {/* Header */}
       <header className="dashboard-header">
         <div className="header-content">
-          <h1>Patient Dashboard</h1>
-          <div className="user-info">
-            <span>Welcome, {patientData.name}</span>
-            <button className="logout-btn">Logout</button>
+          <div className="welcome-section">
+            <h1>Welcome back, {patient.first_name}!</h1>
+            <p>Here's your health overview for today</p>
+          </div>
+          <div className="header-actions">
+            <button onClick={handleLogout} className="logout-button">
+              Logout
+            </button>
           </div>
         </div>
       </header>
 
-      <nav className="dashboard-nav">
-        <button 
-          className={`nav-tab ${activeTab === 'overview' ? 'active' : ''}`}
+      {/* Stats Cards */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon">📅</div>
+          <div className="stat-content">
+            <h3>{stats.total_appointments}</h3>
+            <p>Total Appointments</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">⏰</div>
+          <div className="stat-content">
+            <h3>{stats.upcoming_appointments}</h3>
+            <p>Upcoming Appointments</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">📊</div>
+          <div className="stat-content">
+            <h3>{stats.completed_tests}</h3>
+            <p>Completed Tests</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">💊</div>
+          <div className="stat-content">
+            <h3>{stats.active_medications}</h3>
+            <p>Active Medications</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="dashboard-tabs">
+        <button
+          className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
           Overview
         </button>
-        <button 
-          className={`nav-tab ${activeTab === 'medications' ? 'active' : ''}`}
+        <button
+          className={`tab-button ${activeTab === 'medications' ? 'active' : ''}`}
           onClick={() => setActiveTab('medications')}
         >
           Medications
         </button>
-        <button 
-          className={`nav-tab ${activeTab === 'appointments' ? 'active' : ''}`}
+        <button
+          className={`tab-button ${activeTab === 'appointments' ? 'active' : ''}`}
           onClick={() => setActiveTab('appointments')}
         >
           Appointments
         </button>
-        <button 
-          className={`nav-tab ${activeTab === 'test-results' ? 'active' : ''}`}
+        <button
+          className={`tab-button ${activeTab === 'test-results' ? 'active' : ''}`}
           onClick={() => setActiveTab('test-results')}
         >
           Test Results
         </button>
-      </nav>
+      </div>
 
-      <main className="dashboard-content">
-        {activeTab === 'overview' && renderOverview()}
-        {activeTab === 'medications' && renderMedications()}
-        {activeTab === 'appointments' && renderAppointments()}
-        {activeTab === 'test-results' && renderTestResults()}
-      </main>
+      {/* Tab Content */}
+      <div className="tab-content">
+        {activeTab === 'overview' && (
+          <div className="overview-tab">
+            <div className="content-grid">
+              <div className="content-card">
+                <h3>Recent Activity</h3>
+                <div className="activity-list">
+                  {recent_activity.map((activity, index) => (
+                    <div key={index} className="activity-item">
+                      <div className="activity-icon">
+                        {activity.type === 'appointment' && '📅'}
+                        {activity.type === 'test_result' && '📊'}
+                        {activity.type === 'medication' && '💊'}
+                      </div>
+                      <div className="activity-content">
+                        <h4>{activity.title}</h4>
+                        <p>{activity.date} {activity.time && `• ${activity.time}`}</p>
+                        {activity.result && <p className="result">{activity.result}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="content-card">
+                <h3>Quick Actions</h3>
+                <div className="quick-actions">
+                  <button className="action-button">
+                    📅 Schedule Appointment
+                  </button>
+                  <button className="action-button">
+                    💊 Request Refill
+                  </button>
+                  <button className="action-button">
+                    📞 Contact Doctor
+                  </button>
+                  <button className="action-button">
+                    📋 Update Profile
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'medications' && (
+          <div className="medications-tab">
+            <div className="content-card">
+              <h3>Current Medications</h3>
+              <div className="medications-list">
+                {medications.map((medication, index) => (
+                  <div key={index} className="medication-item">
+                    <div className="medication-info">
+                      <h4>{medication.name}</h4>
+                      <p className="dosage">{medication.dosage}</p>
+                      <p className="frequency">{medication.frequency}</p>
+                    </div>
+                    <div className="medication-status">
+                      <span className={`status-badge ${medication.status}`}>
+                        {medication.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'appointments' && (
+          <div className="appointments-tab">
+            <div className="content-card">
+              <h3>Upcoming Appointments</h3>
+              <div className="appointments-list">
+                {upcoming_appointments.map((appointment, index) => (
+                  <div key={index} className="appointment-item">
+                    <div className="appointment-info">
+                      <h4>{appointment.doctor}</h4>
+                      <p className="specialty">{appointment.specialty}</p>
+                      <p className="date-time">
+                        {appointment.date} • {appointment.time}
+                      </p>
+                      <p className="type">{appointment.type}</p>
+                    </div>
+                    <div className="appointment-actions">
+                      <button className="action-button small">Reschedule</button>
+                      <button className="action-button small secondary">Cancel</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'test-results' && (
+          <div className="test-results-tab">
+            <div className="content-card">
+              <h3>Recent Test Results</h3>
+              <div className="test-results-list">
+                <div className="test-result-item">
+                  <div className="test-info">
+                    <h4>Cognitive Assessment</h4>
+                    <p className="date">January 15, 2024</p>
+                    <p className="result">Mild Cognitive Impairment</p>
+                  </div>
+                  <div className="test-actions">
+                    <button className="action-button small">View Details</button>
+                    <button className="action-button small secondary">Download</button>
+                  </div>
+                </div>
+                <div className="test-result-item">
+                  <div className="test-info">
+                    <h4>Blood Work</h4>
+                    <p className="date">January 10, 2024</p>
+                    <p className="result">Normal Range</p>
+                  </div>
+                  <div className="test-actions">
+                    <button className="action-button small">View Details</button>
+                    <button className="action-button small secondary">Download</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

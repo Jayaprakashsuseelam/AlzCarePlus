@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { authAPI, handleAPIError } from '../../services/api';
 import './PatientAuth.css';
 
 const ResetPassword = () => {
@@ -7,6 +8,8 @@ const ResetPassword = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e) => {
@@ -18,6 +21,9 @@ const ResetPassword = () => {
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    if (apiError) {
+      setApiError('');
     }
   };
 
@@ -31,17 +37,26 @@ const ResetPassword = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
     
-    if (Object.keys(newErrors).length === 0) {
-      // Handle reset password logic here
-      console.log('Reset password attempt:', formData);
-      // You would typically make an API call here
-      setIsSubmitted(true);
-    } else {
+    if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      return;
+    }
+
+    setIsLoading(true);
+    setApiError('');
+
+    try {
+      await authAPI.resetPassword(formData.email);
+      setIsSubmitted(true);
+    } catch (error) {
+      const errorMessage = handleAPIError(error);
+      setApiError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -94,6 +109,12 @@ const ResetPassword = () => {
           <p>Enter your email address to receive a password reset link</p>
         </div>
 
+        {apiError && (
+          <div className="error-alert">
+            {apiError}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
@@ -105,12 +126,17 @@ const ResetPassword = () => {
               onChange={handleChange}
               className={errors.email ? 'error' : ''}
               placeholder="Enter your email address"
+              disabled={isLoading}
             />
             {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
 
-          <button type="submit" className="auth-button">
-            Send Reset Link
+          <button 
+            type="submit" 
+            className={`auth-button ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
 
