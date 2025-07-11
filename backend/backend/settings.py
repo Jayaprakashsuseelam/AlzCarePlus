@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'patients',
+    'caretakers',
     'dashboard',
     'user_settings',
 ]

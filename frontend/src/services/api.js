@@ -16,7 +16,7 @@ const getAuthHeaders = () => {
   const token = localStorage.getItem('authToken');
   return {
     'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Token ${token}` })
+    ...(token && { 'Authorization': `Bearer ${token}` })
   };
 };
 
@@ -66,6 +66,30 @@ export const authAPI = {
     });
     return handleResponse(response);
   },
+
+  // Caretaker Registration
+  caretakerRegister: async (caretakerData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/register/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(caretakerData),
+    });
+    return handleResponse(response);
+  },
+
+  // Caretaker Login
+  caretakerLogin: async (credentials) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+    return handleResponse(response);
+  },
 };
 
 // Patient Profile API calls
@@ -92,6 +116,105 @@ export const patientAPI = {
   // Get patient dashboard data
   getDashboard: async () => {
     const response = await fetch(`${API_BASE_URL}/patients/dashboard/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+};
+
+// Caretaker API calls
+export const caretakerAPI = {
+  // Get caretaker profile
+  getProfile: async () => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/profile/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Update caretaker profile
+  updateProfile: async (profileData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/profile/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(profileData),
+    });
+    return handleResponse(response);
+  },
+
+  // Get caretaker dashboard data
+  getDashboard: async () => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/dashboard/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Get assigned patients
+  getPatients: async () => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/patients/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Get tasks
+  getTasks: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/caretakers/tasks/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Create task
+  createTask: async (taskData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/tasks/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(taskData),
+    });
+    return handleResponse(response);
+  },
+
+  // Update task
+  updateTask: async (taskId, taskData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/tasks/${taskId}/update/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(taskData),
+    });
+    return handleResponse(response);
+  },
+
+  // Get schedule
+  getSchedule: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/caretakers/schedule/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Create schedule entry
+  createSchedule: async (scheduleData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/schedule/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(scheduleData),
+    });
+    return handleResponse(response);
+  },
+
+  // Get task statistics
+  getTaskStatistics: async () => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/task-statistics/`, {
       method: 'GET',
       headers: getAuthHeaders(),
     });
