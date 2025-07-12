@@ -1,0 +1,339 @@
+/* Clinic Authentication Styles */
+.clinic-auth-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.clinic-auth-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+.clinic-auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4CAF50, #2196F3, #9C27B0);
+}
+
+.clinic-auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.clinic-auth-header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #4CAF50, #2196F3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.clinic-auth-header p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.clinic-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.clinic-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clinic-form-group label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.clinic-form-group input,
+.clinic-form-group select,
+.clinic-form-group textarea {
+  padding: 15px;
+  border: 2px solid #e0e6ed;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+.clinic-form-group input:focus,
+.clinic-form-group select:focus,
+.clinic-form-group textarea:focus {
+  outline: none;
+  border-color: #4CAF50;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.clinic-form-group input.error,
+.clinic-form-group select.error,
+.clinic-form-group textarea.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.clinic-error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.clinic-error-message::before {
+  content: '⚠';
+  font-size: 1rem;
+}
+
+.clinic-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.clinic-form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.clinic-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.clinic-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #4CAF50;
+}
+
+.clinic-forgot-password {
+  color: #4CAF50;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.clinic-forgot-password:hover {
+  color: #45a049;
+  text-decoration: underline;
+}
+
+.clinic-auth-button {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.clinic-auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+}
+
+.clinic-auth-button:active {
+  transform: translateY(0);
+}
+
+.clinic-auth-button.loading {
+  background: #95a5a6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.clinic-auth-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.clinic-error-alert {
+  background: #fdf2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.clinic-error-alert::before {
+  content: '⚠';
+  font-size: 1.2rem;
+}
+
+.clinic-success-alert {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.clinic-success-alert::before {
+  content: '✓';
+  font-size: 1.2rem;
+}
+
+.clinic-auth-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e6ed;
+}
+
+.clinic-auth-footer p {
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.clinic-auth-link {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.clinic-auth-link:hover {
+  color: #45a049;
+  text-decoration: underline;
+}
+
+.clinic-form-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.clinic-form-section h3 {
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.clinic-license-info {
+  background: #e8f5e8;
+  border: 1px solid #4CAF50;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.clinic-license-info h4 {
+  color: #2c3e50;
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+}
+
+.clinic-license-info p {
+  color: #7f8c8d;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .clinic-auth-card {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+  
+  .clinic-auth-header h1 {
+    font-size: 2rem;
+  }
+  
+  .clinic-form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .clinic-form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .clinic-auth-container {
+    padding: 10px;
+  }
+  
+  .clinic-auth-card {
+    padding: 25px 15px;
+  }
+  
+  .clinic-auth-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .clinic-form-group input,
+  .clinic-form-group select,
+  .clinic-form-group textarea {
+    padding: 12px;
+  }
+} 

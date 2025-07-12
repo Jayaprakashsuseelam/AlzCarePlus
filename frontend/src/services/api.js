@@ -222,6 +222,273 @@ export const caretakerAPI = {
   },
 };
 
+// Clinic API calls
+export const clinicAPI = {
+  // Authentication
+  register: async (clinicData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/register/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(clinicData),
+    });
+    return handleResponse(response);
+  },
+
+  login: async (credentials) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+    return handleResponse(response);
+  },
+
+  // Profile
+  getProfile: async () => {
+    const response = await fetch(`${API_BASE_URL}/clinics/profile/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  updateProfile: async (profileData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/profile/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(profileData),
+    });
+    return handleResponse(response);
+  },
+
+  // Dashboard
+  getDashboard: async () => {
+    const response = await fetch(`${API_BASE_URL}/clinics/dashboard/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Staff Management
+  getStaff: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/clinics/staff/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createStaff: async (staffData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/staff/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(staffData),
+    });
+    return handleResponse(response);
+  },
+
+  updateStaff: async (staffId, staffData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/staff/${staffId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(staffData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteStaff: async (staffId) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/staff/${staffId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Patient Management
+  getPatients: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/clinics/patients/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createPatient: async (patientData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/patients/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(patientData),
+    });
+    return handleResponse(response);
+  },
+
+  updatePatient: async (patientId, patientData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/patients/${patientId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(patientData),
+    });
+    return handleResponse(response);
+  },
+
+  deletePatient: async (patientId) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/patients/${patientId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  searchPatients: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/clinics/search-patients/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Appointment Management
+  getAppointments: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/clinics/appointments/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createAppointment: async (appointmentData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/appointments/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(appointmentData),
+    });
+    return handleResponse(response);
+  },
+
+  updateAppointment: async (appointmentId, appointmentData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/appointments/${appointmentId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(appointmentData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteAppointment: async (appointmentId) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/appointments/${appointmentId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  checkInAppointment: async (appointmentId) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/appointments/${appointmentId}/check-in/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  checkOutAppointment: async (appointmentId) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/appointments/${appointmentId}/check-out/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Medical Records
+  getMedicalRecords: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/clinics/medical-records/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createMedicalRecord: async (recordData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/medical-records/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(recordData),
+    });
+    return handleResponse(response);
+  },
+
+  updateMedicalRecord: async (recordId, recordData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/medical-records/${recordId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(recordData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteMedicalRecord: async (recordId) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/medical-records/${recordId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Schedule Management
+  getSchedules: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/clinics/schedule/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createSchedule: async (scheduleData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/schedule/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(scheduleData),
+    });
+    return handleResponse(response);
+  },
+
+  updateSchedule: async (scheduleId, scheduleData) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/schedule/${scheduleId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(scheduleData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteSchedule: async (scheduleId) => {
+    const response = await fetch(`${API_BASE_URL}/clinics/schedule/${scheduleId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Statistics
+  getStatistics: async () => {
+    const response = await fetch(`${API_BASE_URL}/clinics/statistics/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+};
+
 // Utility functions
 export const authUtils = {
   // Store authentication token
