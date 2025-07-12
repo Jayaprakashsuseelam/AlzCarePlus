@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'patients',
     'caretakers',
     'clinics',
-    'dashboard',
     'user_settings',
 ]
 
