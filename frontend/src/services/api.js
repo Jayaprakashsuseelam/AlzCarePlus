@@ -220,6 +220,185 @@ export const caretakerAPI = {
     });
     return handleResponse(response);
   },
+
+  // Caretaker Management (Admin/Management endpoints)
+  getAllCaretakers: async (filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  getCaretakerById: async (caretakerId) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createCaretaker: async (caretakerData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(caretakerData),
+    });
+    return handleResponse(response);
+  },
+
+  updateCaretaker: async (caretakerId, caretakerData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(caretakerData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteCaretaker: async (caretakerId) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Caretaker Profile Management
+  getCaretakerProfile: async (caretakerId) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/profile/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  updateCaretakerProfile: async (caretakerId, profileData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/profile/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(profileData),
+    });
+    return handleResponse(response);
+  },
+
+  // Caretaker Assignments
+  getCaretakerAssignments: async (caretakerId, filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/assignments/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createCaretakerAssignment: async (caretakerId, assignmentData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/assignments/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(assignmentData),
+    });
+    return handleResponse(response);
+  },
+
+  updateCaretakerAssignment: async (caretakerId, assignmentId, assignmentData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/assignments/${assignmentId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(assignmentData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteCaretakerAssignment: async (caretakerId, assignmentId) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/assignments/${assignmentId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Caretaker Tasks (Management)
+  getCaretakerTasks: async (caretakerId, filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/tasks/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createCaretakerTask: async (caretakerId, taskData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/tasks/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(taskData),
+    });
+    return handleResponse(response);
+  },
+
+  updateCaretakerTask: async (caretakerId, taskId, taskData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/tasks/${taskId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(taskData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteCaretakerTask: async (caretakerId, taskId) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/tasks/${taskId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Caretaker Schedule (Management)
+  getCaretakerSchedule: async (caretakerId, filters = {}) => {
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/schedule/?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  createCaretakerSchedule: async (caretakerId, scheduleData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/schedule/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(scheduleData),
+    });
+    return handleResponse(response);
+  },
+
+  updateCaretakerSchedule: async (caretakerId, scheduleId, scheduleData) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/schedule/${scheduleId}/`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(scheduleData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteCaretakerSchedule: async (caretakerId, scheduleId) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/schedule/${scheduleId}/`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Caretaker Statistics
+  getCaretakerStatistics: async (caretakerId) => {
+    const response = await fetch(`${API_BASE_URL}/caretakers/management/${caretakerId}/statistics/`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
 };
 
 // Clinic API calls

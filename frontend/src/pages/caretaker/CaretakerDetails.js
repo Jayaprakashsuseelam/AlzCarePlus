@@ -22,33 +22,25 @@ const CaretakerDetails = () => {
       return;
     }
 
-    fetchCaretakerData();
+    fetchCaretakerDetails();
   }, [id, navigate]);
 
-  const fetchCaretakerData = async () => {
+  const fetchCaretakerDetails = async () => {
     try {
       setIsLoading(true);
-      
-      // Fetch caretaker details
-      const caretakerData = await caretakerAPI.getCaretakerById(id);
+      const [caretakerData, profileData, assignmentsData, tasksData, scheduleData] = await Promise.all([
+        caretakerAPI.getCaretakerById(id),
+        caretakerAPI.getCaretakerProfile(id),
+        caretakerAPI.getCaretakerAssignments(id),
+        caretakerAPI.getCaretakerTasks(id),
+        caretakerAPI.getCaretakerSchedule(id)
+      ]);
+
       setCaretaker(caretakerData);
-      
-      // Fetch profile
-      const profileData = await caretakerAPI.getCaretakerProfile(id);
       setProfile(profileData);
-      
-      // Fetch assignments
-      const assignmentsData = await caretakerAPI.getCaretakerAssignments(id);
       setAssignments(assignmentsData);
-      
-      // Fetch tasks
-      const tasksData = await caretakerAPI.getCaretakerTasks(id);
       setTasks(tasksData);
-      
-      // Fetch schedule
-      const scheduleData = await caretakerAPI.getCaretakerSchedule(id);
       setSchedule(scheduleData);
-      
     } catch (error) {
       const errorMessage = handleAPIError(error);
       setError(errorMessage);
@@ -130,7 +122,7 @@ const CaretakerDetails = () => {
     const priorityInfo = priorityMap[priority] || { label: priority, class: 'default' };
     
     return (
-      <span className={`task-priority-badge ${priorityInfo.class}`}>
+      <span className={`priority-badge ${priorityInfo.class}`}>
         {priorityInfo.label}
       </span>
     );
@@ -168,7 +160,7 @@ const CaretakerDetails = () => {
         <div className="not-found">
           <i className="fas fa-user-slash"></i>
           <h3>Caretaker Not Found</h3>
-          <p>The caretaker you're looking for doesn't exist or has been removed.</p>
+          <p>The requested caretaker could not be found.</p>
           <button onClick={() => navigate('/caretaker/management')} className="back-btn">
             Back to Management
           </button>
@@ -196,7 +188,7 @@ const CaretakerDetails = () => {
                 </div>
               )}
             </div>
-            <div className="caretaker-details-info">
+            <div className="caretaker-basic-info">
               <h1>{caretaker.full_name}</h1>
               <p className="professional-title">{caretaker.professional_title}</p>
               <div className="caretaker-badges">
@@ -379,12 +371,40 @@ const CaretakerDetails = () => {
                 </div>
               )}
             </div>
+
+            {/* Bio Section */}
+            {profile && profile.bio && (
+              <div className="bio-section">
+                <h3>Biography</h3>
+                <p>{profile.bio}</p>
+              </div>
+            )}
+
+            {/* Certifications & Education */}
+            {(profile?.certifications || profile?.education) && (
+              <div className="credentials-section">
+                <div className="credentials-grid">
+                  {profile.certifications && (
+                    <div className="credential-card">
+                      <h4>Certifications</h4>
+                      <p>{profile.certifications}</p>
+                    </div>
+                  )}
+                  {profile.education && (
+                    <div className="credential-card">
+                      <h4>Education</h4>
+                      <p>{profile.education}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
         {activeTab === 'assignments' && (
           <div className="assignments-tab">
-            <div className="assignments-header">
+            <div className="tab-header">
               <h3>Patient Assignments</h3>
               <button className="add-assignment-btn">
                 <i className="fas fa-plus"></i>
@@ -393,31 +413,50 @@ const CaretakerDetails = () => {
             </div>
             
             {assignments.length === 0 ? (
-              <div className="no-data">
+              <div className="empty-state">
                 <i className="fas fa-users"></i>
                 <h4>No Patient Assignments</h4>
-                <p>This caretaker hasn't been assigned to any patients yet.</p>
+                <p>This caretaker has not been assigned to any patients yet.</p>
               </div>
             ) : (
               <div className="assignments-grid">
                 {assignments.map((assignment) => (
                   <div key={assignment.id} className="assignment-card">
                     <div className="assignment-header">
-                      <h4>{assignment.patient.full_name}</h4>
+                      <div className="patient-info">
+                        <h4>{assignment.patient.full_name}</h4>
+                        <p>Patient ID: {assignment.patient.id}</p>
+                      </div>
                       <span className={`assignment-type ${assignment.assignment_type}`}>
                         {assignment.assignment_type}
                       </span>
                     </div>
                     <div className="assignment-details">
-                      <p><strong>Assignment Date:</strong> {formatDate(assignment.assignment_date)}</p>
-                      <p><strong>Status:</strong> {assignment.is_active ? 'Active' : 'Inactive'}</p>
+                      <div className="detail-item">
+                        <span className="label">Assignment Date:</span>
+                        <span className="value">{formatDate(assignment.assignment_date)}</span>
+                      </div>
                       {assignment.end_date && (
-                        <p><strong>End Date:</strong> {formatDate(assignment.end_date)}</p>
+                        <div className="detail-item">
+                          <span className="label">End Date:</span>
+                          <span className="value">{formatDate(assignment.end_date)}</span>
+                        </div>
                       )}
-                      {assignment.notes && (
-                        <p><strong>Notes:</strong> {assignment.notes}</p>
-                      )}
+                      <div className="detail-item">
+                        <span className="label">Status:</span>
+                        <span className="value">
+                          <span className={`status-badge ${assignment.is_active ? 'active' : 'inactive'}`}>
+                            {assignment.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                        </span>
+                      </div>
                     </div>
+                    {assignment.notes && (
+                      <div className="assignment-notes">
+                        <strong>Notes:</strong>
+                        <p>{assignment.notes}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -427,7 +466,7 @@ const CaretakerDetails = () => {
 
         {activeTab === 'tasks' && (
           <div className="tasks-tab">
-            <div className="tasks-header">
+            <div className="tab-header">
               <h3>Tasks</h3>
               <div className="task-filters">
                 <select className="status-filter">
@@ -441,10 +480,10 @@ const CaretakerDetails = () => {
             </div>
             
             {tasks.length === 0 ? (
-              <div className="no-data">
+              <div className="empty-state">
                 <i className="fas fa-tasks"></i>
                 <h4>No Tasks</h4>
-                <p>This caretaker hasn't been assigned any tasks yet.</p>
+                <p>This caretaker has no assigned tasks.</p>
               </div>
             ) : (
               <div className="tasks-list">
@@ -460,11 +499,25 @@ const CaretakerDetails = () => {
                     <div className="task-details">
                       <p className="task-description">{task.description}</p>
                       <div className="task-meta">
-                        <span><strong>Patient:</strong> {task.patient.full_name}</span>
-                        <span><strong>Type:</strong> {task.task_type}</span>
-                        <span><strong>Date:</strong> {formatDate(task.scheduled_date)}</span>
-                        {task.scheduled_time && (
-                          <span><strong>Time:</strong> {formatTime(task.scheduled_time)}</span>
+                        <div className="meta-item">
+                          <span className="label">Patient:</span>
+                          <span className="value">{task.patient.full_name}</span>
+                        </div>
+                        <div className="meta-item">
+                          <span className="label">Type:</span>
+                          <span className="value">{task.task_type}</span>
+                        </div>
+                        <div className="meta-item">
+                          <span className="label">Scheduled:</span>
+                          <span className="value">
+                            {formatDate(task.scheduled_date)} {task.scheduled_time && formatTime(task.scheduled_time)}
+                          </span>
+                        </div>
+                        {task.completed_date && (
+                          <div className="meta-item">
+                            <span className="label">Completed:</span>
+                            <span className="value">{formatDate(task.completed_date)}</span>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -477,7 +530,7 @@ const CaretakerDetails = () => {
 
         {activeTab === 'schedule' && (
           <div className="schedule-tab">
-            <div className="schedule-header">
+            <div className="tab-header">
               <h3>Schedule</h3>
               <button className="add-schedule-btn">
                 <i className="fas fa-plus"></i>
@@ -486,28 +539,35 @@ const CaretakerDetails = () => {
             </div>
             
             {schedule.length === 0 ? (
-              <div className="no-data">
+              <div className="empty-state">
                 <i className="fas fa-calendar"></i>
                 <h4>No Schedule Entries</h4>
-                <p>No schedule entries have been created for this caretaker.</p>
+                <p>No schedule entries found for this caretaker.</p>
               </div>
             ) : (
               <div className="schedule-list">
                 {schedule.map((entry) => (
                   <div key={entry.id} className="schedule-card">
                     <div className="schedule-header">
-                      <h4>{formatDate(entry.date)}</h4>
-                      <span className={`schedule-type ${entry.schedule_type}`}>
-                        {entry.schedule_type}
-                      </span>
+                      <div className="schedule-date">
+                        <h4>{formatDate(entry.date)}</h4>
+                        <p>{formatTime(entry.start_time)} - {formatTime(entry.end_time)}</p>
+                      </div>
+                      <div className="schedule-badges">
+                        <span className={`schedule-type ${entry.schedule_type}`}>
+                          {entry.schedule_type}
+                        </span>
+                        <span className={`availability-badge ${entry.is_available ? 'available' : 'unavailable'}`}>
+                          {entry.is_available ? 'Available' : 'Unavailable'}
+                        </span>
+                      </div>
                     </div>
-                    <div className="schedule-details">
-                      <p><strong>Time:</strong> {formatTime(entry.start_time)} - {formatTime(entry.end_time)}</p>
-                      <p><strong>Available:</strong> {entry.is_available ? 'Yes' : 'No'}</p>
-                      {entry.notes && (
-                        <p><strong>Notes:</strong> {entry.notes}</p>
-                      )}
-                    </div>
+                    {entry.notes && (
+                      <div className="schedule-notes">
+                        <strong>Notes:</strong>
+                        <p>{entry.notes}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
