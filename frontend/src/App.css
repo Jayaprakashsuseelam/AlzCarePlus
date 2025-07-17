@@ -1,168 +1,250 @@
+/* App Styles */
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  padding: 20px;
-  color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding-top: 70px; /* Account for fixed navigation */
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Placeholder Pages */
+.placeholder-page {
+  padding: 6rem 0;
+  text-align: center;
+  background: #f7fafc;
+  min-height: calc(100vh - 70px);
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.App-header h1 {
-  font-size: 3rem;
+.placeholder-page h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
   margin-bottom: 1rem;
 }
 
-.App-header p {
-  font-size: 1.2rem;
-  opacity: 0.8;
+.placeholder-page p {
+  font-size: 1.25rem;
+  color: #718096;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.landing-container {
-  min-height: 100vh;
+/* 404 Page */
+.not-found-page {
+  padding: 6rem 0;
+  text-align: center;
+  background: #f7fafc;
+  min-height: calc(100vh - 70px);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f7f9fa;
-  padding: 40px 20px;
 }
 
-.landing-title {
+.not-found-page h1 {
   font-size: 3rem;
-  font-weight: bold;
-  color: #2d3a4b;
-  margin-bottom: 1.5rem;
-  letter-spacing: 1px;
-}
-
-.landing-description {
-  font-size: 1.25rem;
-  color: #4a5568;
-  max-width: 600px;
-  line-height: 1.6;
-  margin: 0 auto 3rem auto;
-  background: #fff;
-  padding: 24px 32px;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(44,62,80,0.07);
-}
-
-.landing-actions {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.landing-actions h3 {
+  font-weight: 700;
   color: #2d3748;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.action-links {
-  display: flex;
-  gap: 1rem;
+.not-found-page p {
+  font-size: 1.25rem;
+  color: #718096;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-}
-
-.landing-btn {
-  display: inline-block;
-  padding: 12px 24px;
+  padding: 1rem 2rem;
   border-radius: 8px;
-  text-decoration: none;
   font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  text-decoration: none;
+  transition: all 0.3s ease;
   border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
-.landing-btn.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.btn-primary {
+  background: #667eea;
   color: white;
-}
-
-.landing-btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-}
-
-.landing-btn.secondary {
-  background: white;
-  color: #4a5568;
-  border-color: #e2e8f0;
-}
-
-.landing-btn.secondary:hover {
   border-color: #667eea;
-  color: #667eea;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive design for landing page */
-@media (max-width: 640px) {
-  .landing-title {
+.btn-primary:hover {
+  background: #5a6fd8;
+  border-color: #5a6fd8;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #667eea;
+  border-color: #667eea;
+}
+
+.btn-secondary:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .placeholder-page,
+  .not-found-page {
+    padding: 4rem 0;
+  }
+  
+  .placeholder-page h1 {
+    font-size: 2rem;
+  }
+  
+  .placeholder-page p {
+    font-size: 1.1rem;
+  }
+  
+  .not-found-page h1 {
     font-size: 2.5rem;
   }
   
-  .landing-description {
+  .not-found-page p {
     font-size: 1.1rem;
-    padding: 20px 24px;
-  }
-  
-  .action-links {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .landing-btn {
-    width: 200px;
-    text-align: center;
   }
 }
 
 @media (max-width: 480px) {
-  .landing-container {
-    padding: 20px 10px;
+  .placeholder-page h1 {
+    font-size: 1.75rem;
   }
   
-  .landing-title {
+  .placeholder-page p {
+    font-size: 1rem;
+  }
+  
+  .not-found-page h1 {
     font-size: 2rem;
   }
   
-  .landing-description {
+  .not-found-page p {
     font-size: 1rem;
-    padding: 16px 20px;
+  }
+  
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation Classes */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  animation: slideInLeft 0.6s ease forwards;
+}
+
+@keyframes slideInLeft {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  opacity: 0;
+  transform: translateX(30px);
+  animation: slideInRight 0.6s ease forwards;
+}
+
+@keyframes slideInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Loading States */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Accessibility */
+.btn:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .placeholder-page,
+  .not-found-page {
+    background: white;
+    border: 2px solid #000;
+  }
+  
+  .btn {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  
+  .btn:hover {
+    transform: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .placeholder-page,
+  .not-found-page {
+    background: white;
+    color: black;
+  }
+  
+  .btn {
+    display: none;
   }
 }
