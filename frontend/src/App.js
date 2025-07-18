@@ -39,6 +39,11 @@ import CaretakerDashboard from './components/caretaker/CaretakerDashboard';
 import CaretakerManagement from './pages/caretaker/CaretakerManagement';
 import CaretakerDetails from './pages/caretaker/CaretakerDetails';
 
+// Import clinic components
+import ClinicLogin from './pages/clinic/ClinicLogin';
+import ClinicRegister from './pages/clinic/ClinicRegister';
+import ClinicDashboard from './pages/clinic/ClinicDashboard';
+
 function App() {
   return (
     <Router>
@@ -64,6 +69,11 @@ function App() {
             <Route path="/caretaker/management" element={<CaretakerManagement />} />
             <Route path="/caretaker/details/:id" element={<CaretakerDetails />} />
             
+            {/* Clinic Routes */}
+            <Route path="/clinic/login" element={<ClinicLogin />} />
+            <Route path="/clinic/register" element={<ClinicRegister />} />
+            <Route path="/clinic/dashboard" element={<ClinicDashboard />} />
+            
             {/* Additional Routes - Placeholder pages */}
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/services/patient-care" element={<ServicesPage />} />
@@ -74,9 +84,6 @@ function App() {
             <Route path="/patient/care-plans" element={<PatientsPage />} />
             <Route path="/caregivers" element={<CaretakersPage />} />
             <Route path="/clinics" element={<ClinicsPage />} />
-            <Route path="/clinic/register" element={<ClinicsPage />} />
-            <Route path="/clinic/login" element={<ClinicsPage />} />
-            <Route path="/clinic/dashboard" element={<ClinicsPage />} />
             <Route path="/clinic/staff" element={<ClinicsPage />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/blog" element={<BlogPage />} />
