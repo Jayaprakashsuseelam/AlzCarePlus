@@ -2,7 +2,7 @@
 
 A comprehensive healthcare management system designed for Alzheimer's care, featuring patient registration, login, and dashboard functionality.
 
-## Features
+## Features - Updated
 
 ### Patient Management
 - **Patient Registration**: Complete registration form with validation
