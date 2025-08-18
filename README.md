@@ -316,3 +316,27 @@ This project is licensed under the MIT License.
 ## Support
 
 For support and questions, please contact the development team or create an issue in the repository.
+
+
+## Reference Products:
+Device / Platform Type Key Features Global / Affordable?
+
+ADMarker Research prototype Multi-modal, federated AI, high accuracy Scalable, privacy-preserving
+
+SafeWander Wearable sensor Bed exit alerts Affordable concept, replicable globally
+
+Wander Alert, Vitality Monitor, Lively Mobile Plus, Memo Box Wearables / Smart Reminders Geo-fencing, vitals tracking, communication, memory aids Variable affordability & worldwide use
+
+QuikTok & MedaCareLLM AI LLM companions Phone conversation, AI smart glasses support Designed for accessibility and broad reach
+
+MICA (ValueCare) Conversational AI wristwear Voice prompts, real-time logging, cloud dashboard UK-based, scalable globally
+
+Empatica Devices Health-monitoring wearables Vitals, seizure detection, remote monitoring Clinical-grade, more costly
+
+Hexoskin Smart clothing Continuous biometric tracking Research-focused, scalable
+
+Sleeptracker-AI Contactless monitoring Sleep data via sensors, cloud API High compliance, unobtrusive
+
+Dementia Locate Tracker Commercial GPS wearable Wandering alerts, location tracking Affordable, available
+
+Alzheimer Calendar Clock Assistive device Displays date/time clearly Very affordable, low-tech
