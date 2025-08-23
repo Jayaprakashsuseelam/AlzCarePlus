@@ -340,3 +340,10 @@ Alzheimer Calendar Clock Assistive device Displays date/time clearly Very afford
 Button Sensor (Wearable Sensor)
 Gateway (Signal Relay Unit)
 Mobile App (iOS & Android)
+
+Component	Description
+Button Sensor	Secure, angle-detecting wearable; replaces pressure detection; battery-powered (6–12 mo).
+Gateway	Wi-Fi relay for remote alerts; optional when caregiver is nearby.
+Mobile App	Available on iOS & Android; delivers real-time alerts and history; supports multi-user/patient.
+Key Features	Discreet alerts, portability, multiple patient monitoring, reliable detection, easy setup.
+Tech Stack	BLE-enabled firmware; Bluetooth & Wi-Fi
