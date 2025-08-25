@@ -334,8 +334,6 @@ Alzheimer Calendar Clock Assistive device Displays date/time clearly Very afford
 ## Reference Studies:
 - https://arxiv.org/abs/2310.15301
 
-
-
 ## Core System Components
 Button Sensor (Wearable Sensor)
 Gateway (Signal Relay Unit)
